@@ -20,6 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 // import io.github.bonigarcia.wdm.WebDriverManager;
 import demo.wrappers.Wrappers;
 
@@ -61,15 +64,14 @@ public class TestCases {
     @AfterTest
     public void endTest() {
 
-         driver.close();
-         driver.quit();
+        // driver.close();
+        // driver.quit();
 
     }
 
-    @Test
+     @Test
     public void testCase01() throws InterruptedException {
 
-       
         driver.get("https://www.flipkart.com/");
 
         WebElement searchBar = driver.findElement(By.xpath("//input[@title='Search for Products, Brands and More']"));
@@ -104,7 +106,7 @@ public class TestCases {
 
     @Test
     public void testCase02() throws InterruptedException {
-       
+
         driver.get("https://www.flipkart.com/");
         Thread.sleep(2000);
         WebElement searchBar = driver.findElement(By.xpath("//input[@title='Search for Products, Brands and More']"));
@@ -130,10 +132,10 @@ public class TestCases {
 
     @Test
     public void testCase03() throws InterruptedException {
-       // Wrappers.launchUrl();
+        // Wrappers.launchUrl();
         driver.get("https://www.flipkart.com/");
         WebElement searchBar = driver.findElement(By.xpath("//input[@title='Search for Products, Brands and More']"));
-        //searchBar.sendKeys("Coffee Mug", Keys.ENTER);
+        // searchBar.sendKeys("Coffee Mug", Keys.ENTER);
         Wrappers.searchProduct(searchBar, "Coffee Mug");
         Thread.sleep(2000);
 
@@ -165,28 +167,56 @@ public class TestCases {
             array[i] = Integer.parseInt(s);
         }
         Arrays.sort(array);
-        for (int i = array.length - 5; i < array.length; i++) {
+
+        for (int i = 0; i < array.length; i++) {
             System.out.print(array[i] + " ");
-            for (int j = 0; j < productListReview.size(); j++) {
-                String text1 = productListReview.get(j).getText();
-                String s = text1.replaceAll("[^\\d]", "");
-                int x = Integer.parseInt(s);
-                if (array[i] == x) {
-                    WebElement titles = driver.findElement(
-                            By.xpath("(//div[@class='slAVV4']/div[@class='_5OesEi afFzxY']/span[@class='Wphh3N'])["
-                                    + (j + 1) + "]//parent::div//preceding-sibling::a[1]"));
-
-                    WebElement imageUrl = driver.findElement(
-                            By.xpath("(//div[@class='slAVV4']/div[@class='_5OesEi afFzxY']/span[@class='Wphh3N'])["
-                                    + (j + 1)
-                                    + "]//parent::div//preceding-sibling::a[1]//parent::div/a/div/div/div/img[@src]"));
-
-                    System.out.println(titles.getText());
-                    System.out.println(imageUrl.getAttribute("src"));
-                }
-            }
         }
 
+        // for (int i = array.length - 5; i < array.length; i++) {
+        // System.out.print(array[i] + " ");
+        // for (int j = 0; j < productListReview.size(); j++) {
+        // String text1 = productListReview.get(j).getText();
+        // String s = text1.replaceAll("[^\\d]", "");
+        // int x = Integer.parseInt(s);
+        // if (array[i] == x) {
+        // WebElement titles = driver.findElement(
+        // By.xpath("(//div[@class='slAVV4']/div[@class='_5OesEi
+        // afFzxY']/span[@class='Wphh3N'])["
+        // + (j + 1) + "]//parent::div//preceding-sibling::a[1]"));
+
+        // WebElement imageUrl = driver.findElement(
+        // By.xpath("(//div[@class='slAVV4']/div[@class='_5OesEi
+        // afFzxY']/span[@class='Wphh3N'])["
+        // + (j + 1)
+        // +
+        // "]//parent::div//preceding-sibling::a[1]//parent::div/a/div/div/div/img[@src]"));
+
+
+
+        ///----------------------------updated code------------------------------------///////
+
+        for (int i = array.length - 5; i < array.length; i++) {
+            // System.out.print(array[i] + " ");
+            int y = array[i];
+            // Step 1: Format the number with a comma
+            NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+            String formattedNumber = numberFormat.format(y);
+
+            // Step 2: Add parentheses around the formatted number
+            String finalString = "(" + formattedNumber + ")";
+
+            System.out.println(finalString);
+            WebElement titles = driver.findElement(
+                    By.xpath("(//div[@class='slAVV4']/div[@class='_5OesEi afFzxY']/span[text()='" + finalString
+                            + "'])//parent::div//preceding-sibling::a[1]"));
+
+            WebElement imageUrl = driver.findElement(
+                    By.xpath("(//div[@class='slAVV4']/div[@class='_5OesEi afFzxY']/span[text()='" + finalString
+                            + "'])//parent::div//preceding-sibling::a[1]//parent::div/a/div/div/div/img[@src]"));
+
+            System.out.println(titles.getText());
+            System.out.println(imageUrl.getAttribute("src"));
+        }
     }
 
 }
